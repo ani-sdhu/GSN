@@ -10,8 +10,8 @@ Year you entered the program,cohort_year
 Current status,status
 Advisor,advisor
 Committee members,committee
-Year you finished the PhD,grad_year
-First job title after the PhD,first_placement_title
+Year you finished your degree,grad_year
+First job title after graduating,first_placement_title
 First job organization,first_placement_org
 Current job title,current_title
 Current organization,current_org
@@ -24,7 +24,7 @@ Methods,methods
 Regions you study,regions
 Research languages,languages
 Short description of your research,blurb
-Dissertation title,dissertation_title
+Dissertation or thesis title,dissertation_title
 Selected work,selected_work
 Courses taught as instructor of record,courses_taught
 Photo link,photo_url

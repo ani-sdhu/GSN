@@ -32,7 +32,7 @@ var CONFIG = {
 };
 
 var VOCAB = {
-  program: ['POLS/INTL PhD', 'PADP PhD'],
+  program: ['POLS/INTL PhD', 'PADP PhD', 'POLS/INTL MA', 'MIP'],
   status: ['Coursework', 'Candidate (ABD)', 'On the job market', 'Alumni'],
   subfields: ['American', 'Comparative', 'International Relations',
     'Political Theory', 'Methods', 'Law & Courts', 'Public Management',
@@ -118,6 +118,8 @@ function buildForm_() {
   text_(form, 'Pronouns', false);
   form.addMultipleChoiceItem()
     .setTitle('Program')
+    .setHelpText('MA is the Master of Arts in Political Science & ' +
+      'International Affairs. MIP is the Master of International Policy.')
     .setChoiceValues(VOCAB.program)
     .setRequired(true);
   form.addTextItem()
@@ -135,20 +137,22 @@ function buildForm_() {
       'Jane Smith; Ravi Patel');
   var statusItem = form.addMultipleChoiceItem()
     .setTitle('Current status')
+    .setHelpText('Candidate (ABD) and On the job market are for PhD ' +
+      'students. Current master\'s students should choose Coursework.')
     .setRequired(true);
 
   // Page 3: alumni only (people who pick "Alumni" land here)
   var alumniPage = form.addPageBreakItem()
-    .setTitle('After the PhD')
+    .setTitle('After graduation')
     .setHelpText('This section is only for alumni.');
   form.addTextItem()
-    .setTitle('Year you finished the PhD')
+    .setTitle('Year you finished your degree')
     .setRequired(true)
     .setValidation(FormApp.createTextValidation()
       .requireNumberBetween(1980, 2100)
       .setHelpText('Please enter a four-digit year.')
       .build());
-  text_(form, 'First job title after the PhD', true,
+  text_(form, 'First job title after graduating', true,
     'For example, Assistant Professor.');
   text_(form, 'First job organization', true);
   text_(form, 'Current job title', false);
@@ -195,7 +199,9 @@ function buildForm_() {
       .requireTextLengthLessThanOrEqualTo(400)
       .setHelpText('Please keep this to 400 characters or fewer.')
       .build());
-  text_(form, 'Dissertation title', false);
+  text_(form, 'Dissertation or thesis title', false,
+    'PhD students: your dissertation. Master\'s students: a thesis or ' +
+    'capstone title, if you have one.');
   form.addParagraphTextItem()
     .setTitle('Selected work')
     .setHelpText('Up to 3 items, one per line, written as Title | Link. ' +

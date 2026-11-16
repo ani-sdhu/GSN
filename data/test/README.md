@@ -3,7 +3,7 @@
 `mock_responses.csv` has the same columns as the Google Sheet the form
 creates, so the site can be tested before the real form is live.
 
-## What's in it (51 rows)
+## What's in it (56 rows)
 
 **30 SPIA faculty rows.** Built only from the public SPIA faculty
 directory (spia.uga.edu/directory/faculty/), pulled November 2026:
@@ -18,15 +18,16 @@ name, title, department, research-area tags, profile link, and photo.
   These rows show up only in a test build. The real build refuses
   any `TEST:` row.
 
-**21 fictional rows** (obviously invented names, `example.edu` and
+**26 fictional rows** (obviously invented names, `example.edu` and
 `example.com` links) that test the review rules:
 
 | Who | What it tests | Should appear? |
 |---|---|---|
-| 6 current students | all statuses, both programs, open-to flags, hidden fields | yes |
-| 8 alumni (2012 to 2025) | every sector, the placement table and map | yes |
+| 8 current students | all statuses, all four programs (PhD, MA, MIP), open-to flags, hidden fields | yes |
+| 10 alumni (2012 to 2025) | every sector, PhD and master's alumni, the placement table and map | yes |
 | Wren Quillfeather | approved update, then a newer **pending** update | yes, with the "UPDATED BLURB" text |
 | Oskar Mapleton | removal request (no approval needed) | **no** |
 | Pendleton Ashby, Marigold Fairweather | pending | **no** |
 | Rejecta Nullwood | rejected | **no** |
+| Abner Mismatch | approved, but a master's student marked Candidate (ABD) | **no**, and listed in the admin report |
 | Brokenrow Testcase | approved, but bad subfield, blurb too long, bad link | **no**, and listed in the admin report |
