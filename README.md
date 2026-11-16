@@ -143,7 +143,7 @@ theme/                   site theme and the black UGA bar
 data/vocab/              controlled vocabularies
 data/form_map.csv        form question title -> field name
 data/geocache.csv        city coordinates for the map
-data/test/               mock responses (see its README)
+data/test/               faculty test rows and edge-case rows (see its README)
 google-form/             script that creates the form and review sheet
 docs/                    form setup guide and build decisions
 ```

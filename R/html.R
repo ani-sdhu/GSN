@@ -84,7 +84,7 @@ test_banner <- function(mode) {
   if (!identical(mode, "test")) return(NULL)
   div(class = "test-banner", role = "note",
       tags$strong("Test build. "),
-      "Rows marked “Faculty (test data)” come from the public SPIA ",
-      "faculty directory and are here only to test the layout. Everyone ",
-      "else is fictional. Do not publish this build.")
+      "Every profile here comes from the public SPIA faculty directory and ",
+      "is here only to test the layout. These are not real sign-ups. ",
+      "Do not publish this build.")
 }

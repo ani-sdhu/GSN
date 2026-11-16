@@ -8,6 +8,7 @@ source("R/site.R")
 source("R/theme_uga.R")
 library(ggplot2)
 alumni <- people |> filter(status == "Alumni")
+has_alumni <- nrow(alumni) > 0
 geo <- readr::read_csv("data/geocache.csv", show_col_types = FALSE)
 
 cat_html <- function(x) cat(raw_block(x))
@@ -20,14 +21,16 @@ cat_html(tagList(
   test_banner(build_mode),
   breadcrumbs(list(text = "Home", href = "index.html"), list(text = "Alumni & Placements")),
   h1(class = "page-title", "Alumni & Placements"),
-  p(class = "lead-red", sprintf("%d alumni in the network, graduating from %d to %d.",
+  if (has_alumni) p(class = "lead-red", sprintf("%d alumni in the network, graduating from %d to %d.",
     nrow(alumni), min(alumni$grad_year), max(alumni$grad_year)))
+  else p(class = "lead-red", "No alumni profiles yet. The placement chart, map, and table will appear here once alumni join.")
 ))
 ```
 
-## Where alumni work now {.section-title}
-
 ```{r}
+#| output: asis
+#| eval: !expr has_alumni
+cat_html(h2(class = "section-title", "Where alumni work now"))
 academic <- c("Tenure Track", "Teaching-Focused", "Postdoc")
 sectors <- readr::read_csv("data/vocab/sector.csv", show_col_types = FALSE)$term
 counts <- alumni |>
@@ -42,7 +45,8 @@ sector_alt <- paste0("Bar chart of alumni by current sector. ",
 ```
 
 ```{r}
-#| fig-alt: !expr sector_alt
+#| eval: !expr has_alumni
+#| fig-alt: !expr if (exists("sector_alt")) sector_alt else "" 
 #| fig-cap: "Current sector as each alum reported it. Academic covers tenure-track, teaching-focused, and postdoc positions."
 #| fig-width: 8
 #| fig-height: 4.6
@@ -59,10 +63,10 @@ ggplot(counts, aes(x = n, y = sector)) +
         strip.text.y.left = element_text(angle = 0, face = "bold", vjust = 1))
 ```
 
-## Map of current locations {.section-title}
-
 ```{r}
 #| output: asis
+#| eval: !expr has_alumni
+cat_html(h2(class = "section-title", "Map of current locations"))
 on_map <- alumni |>
   left_join(geo, by = c("current_city" = "city", "current_country" = "country"))
 missing <- on_map |> filter(is.na(lat))
@@ -75,6 +79,7 @@ if (nrow(missing) > 0) {
 ```
 
 ```{r}
+#| eval: !expr has_alumni
 #| fig-alt: "Map of alumni current locations"
 library(leaflet)
 popup <- sprintf('<strong><a href="people/%s/index.html">%s</a></strong><br>%s<br>%s, %s',
@@ -89,10 +94,10 @@ leaflet(on_map, height = 460, width = "100%") |>
                    clusterOptions = markerClusterOptions(showCoverageOnHover = FALSE))
 ```
 
-## Alumni by graduation year {.section-title}
-
 ```{r}
 #| output: asis
+#| eval: !expr has_alumni
+cat_html(h2(class = "section-title", "Alumni by graduation year"))
 years <- sort(unique(alumni$grad_year), decreasing = TRUE)
 blocks <- lapply(years, function(y) {
   al <- alumni |> filter(grad_year == y) |> arrange(last_name)

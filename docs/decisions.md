@@ -111,3 +111,18 @@ review and reverse.
     (`forms.example.com`), admin email (`gsn-admin@example.edu`).
 38. **Network access added to this cloud environment:** `spia.uga.edu`
     (faculty test data) and `cloud.r-project.org` (to install `leaflet`).
+
+## Fictional people removed (your request)
+
+39. **The site is now built only from the 30 SPIA faculty test rows.**
+    All invented people were taken out of `data/test/mock_responses.csv`.
+40. **The invented rows were kept in `data/test/edge_cases.csv`**, which the
+    site never reads. It's the only way to keep testing the approval,
+    update, removal, and validation rules until real submissions exist
+    (`Rscript R/validate.R data/test/edge_cases.csv`). Delete it if you
+    prefer.
+41. **Alumni, Cohorts, and the Methods list show "not yet" messages**,
+    since faculty rows have no alumni details, entry years, or methods.
+    The chart, map, and tables come back on their own once alumni join.
+42. **The hidden-field privacy check has nothing to test right now**,
+    because no faculty row hides anything. It still runs on every build.

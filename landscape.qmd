@@ -7,6 +7,7 @@ description: "What SPIA graduate students and alumni study: counts by subfield, 
 source("R/site.R")
 
 bar_list <- function(values, param, top = Inf) {
+  if (length(unlist(values)) == 0) return(p(class = "figure-note", "None listed yet."))
   counts <- sort(table(unlist(values)), decreasing = TRUE)
   counts <- counts[order(-counts, names(counts))]
   counts <- head(counts, top)
