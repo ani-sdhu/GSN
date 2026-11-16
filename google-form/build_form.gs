@@ -32,7 +32,7 @@ var CONFIG = {
 };
 
 var VOCAB = {
-  program: ['POLS/INTL PhD', 'PADP PhD', 'POLS/INTL MA', 'MIP'],
+  program: ['POLS/INTL PhD', 'PADP PhD', 'POLS/INTL MA', 'MIP', 'MPA'],
   status: ['Coursework', 'Candidate (ABD)', 'On the job market', 'Alumni'],
   subfields: ['American', 'Comparative', 'International Relations',
     'Political Theory', 'Methods', 'Law & Courts', 'Public Management',
@@ -119,7 +119,9 @@ function buildForm_() {
   form.addMultipleChoiceItem()
     .setTitle('Program')
     .setHelpText('MA is the Master of Arts in Political Science & ' +
-      'International Affairs. MIP is the Master of International Policy.')
+      'International Affairs. MIP is the Master of International Policy. ' +
+      'MPA is the Master of Public Administration (joint-degree students ' +
+      'such as MPA/JD should choose MPA).')
     .setChoiceValues(VOCAB.program)
     .setRequired(true);
   form.addTextItem()
