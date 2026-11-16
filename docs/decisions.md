@@ -126,3 +126,14 @@ review and reverse.
     The chart, map, and tables come back on their own once alumni join.
 42. **The hidden-field privacy check has nothing to test right now**,
     because no faculty row hides anything. It still runs on every build.
+
+## Public preview
+
+43. **Preview is published from a `gh-pages` branch** that holds only the
+    built site. The repository was made public for this (free GitHub
+    Pages needs a public repo).
+44. **Every page asks search engines not to index it**
+    (`theme/noindex.html`). Remove that at launch if you want the site
+    to show up in search.
+45. **The banner now says "this is a preview, not the live directory"**
+    instead of "do not publish."

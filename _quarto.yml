@@ -54,6 +54,7 @@ format:
     anchor-sections: false
     smooth-scroll: false
     include-before-body: theme/topbar.html
+    include-in-header: theme/noindex.html
     lang: en
 
 execute:

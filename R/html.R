@@ -85,6 +85,6 @@ test_banner <- function(mode) {
   div(class = "test-banner", role = "note",
       tags$strong("Test build. "),
       "Every profile here comes from the public SPIA faculty directory and ",
-      "is here only to test the layout. These are not real sign-ups. ",
-      "Do not publish this build.")
+      "is here only to test the layout. These are not real sign-ups, and ",
+      "this is a preview, not the live directory.")
 }
