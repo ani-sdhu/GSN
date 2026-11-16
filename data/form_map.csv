@@ -1,0 +1,43 @@
+question,field
+Timestamp,submitted_at
+What would you like to do?,request_type
+First name,first_name
+Last name,last_name
+Email address,email
+Pronouns,pronouns
+Program,program
+Year you entered the program,cohort_year
+Current status,status
+Advisor,advisor
+Committee members,committee
+Year you finished the PhD,grad_year
+First job title after the PhD,first_placement_title
+First job organization,first_placement_org
+Current job title,current_title
+Current organization,current_org
+Current city,current_city
+Current country,current_country
+Sector,sector
+Subfields,subfields
+Research interests,interests
+Methods,methods
+Regions you study,regions
+Research languages,languages
+Short description of your research,blurb
+Dissertation title,dissertation_title
+Selected work,selected_work
+Courses taught as instructor of record,courses_taught
+Photo link,photo_url
+Personal website,website
+Google Scholar,google_scholar
+ORCID,orcid
+CV link,cv_url
+LinkedIn,linkedin
+Bluesky,bluesky
+X (Twitter),x
+I am open to,open_to
+Keep these off my public profile,hidden_fields
+Consent,consent
+review_status,review_status
+id,id
+admin_notes,admin_notes

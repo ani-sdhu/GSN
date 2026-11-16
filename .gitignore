@@ -1,0 +1,17 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Quarto build output
+/_site/
+/.quarto/
+
+# Generated profile pages
+/people/
+
+# Secrets: never commit these
+.Renviron
+*.json.key
+service-account*.json
+.env

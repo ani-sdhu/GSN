@@ -1,0 +1,21 @@
+field,label
+pronouns,Pronouns
+email,Email address
+advisor,Advisor
+committee,Committee members
+cohort_year,Year I entered the program
+languages,Research languages
+dissertation_title,Dissertation title
+selected_work,Selected work
+courses_taught,Courses taught
+photo_url,Photo
+website,Personal website
+google_scholar,Google Scholar
+orcid,ORCID
+cv_url,CV link
+linkedin,LinkedIn
+bluesky,Bluesky
+x,X (Twitter)
+current_title,Current job title
+current_org,Current organization
+current_city,Current city and country
