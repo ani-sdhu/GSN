@@ -1,0 +1,116 @@
+---
+title: "Alumni & Placements"
+description: "Where SPIA graduate alumni went after graduating: first jobs, current positions, sectors, and locations."
+---
+
+```{r}
+source("R/site.R")
+source("R/theme_uga.R")
+library(ggplot2)
+alumni <- people |> filter(status == "Alumni")
+geo <- readr::read_csv("data/geocache.csv", show_col_types = FALSE)
+
+cat_html <- function(x) cat(raw_block(x))
+pos <- function(t, o) { v <- c(t, o); v <- v[!is.na(v)]; if (length(v)) paste(v, collapse = ", ") else "Not listed" }
+```
+
+```{r}
+#| output: asis
+cat_html(tagList(
+  test_banner(build_mode),
+  breadcrumbs(list(text = "Home", href = "index.html"), list(text = "Alumni & Placements")),
+  h1(class = "page-title", "Alumni & Placements"),
+  p(class = "lead-red", sprintf("%d alumni in the network, graduating from %d to %d.",
+    nrow(alumni), min(alumni$grad_year), max(alumni$grad_year)))
+))
+```
+
+## Where alumni work now {.section-title}
+
+```{r}
+academic <- c("Tenure Track", "Teaching-Focused", "Postdoc")
+sectors <- readr::read_csv("data/vocab/sector.csv", show_col_types = FALSE)$term
+counts <- alumni |>
+  count(sector) |>
+  right_join(tibble(sector = sectors), by = "sector") |>
+  mutate(n = coalesce(n, 0L),
+         group = factor(if_else(sector %in% academic, "Academic", "Outside academia"),
+                        levels = c("Academic", "Outside academia")),
+         sector = factor(sector, levels = rev(sectors)))
+sector_alt <- paste0("Bar chart of alumni by current sector. ",
+                     paste0(rev(as.character(counts$sector)), ": ", rev(counts$n), collapse = "; "), ".")
+```
+
+```{r}
+#| fig-alt: !expr sector_alt
+#| fig-cap: "Current sector as each alum reported it. Academic covers tenure-track, teaching-focused, and postdoc positions."
+#| fig-width: 8
+#| fig-height: 4.6
+#| dev: svg
+ggplot(counts, aes(x = n, y = sector)) +
+  geom_col(fill = UGA_RED, width = 0.6) +
+  geom_text(aes(label = n), hjust = -0.6, size = 4, colour = UGA_INK) +
+  facet_grid(group ~ ., scales = "free_y", space = "free_y", switch = "y") +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.12)),
+                     breaks = function(l) seq(0, ceiling(l[2]), by = 1)) +
+  labs(x = "Number of alumni", y = NULL) +
+  theme_uga() +
+  theme(strip.placement = "outside",
+        strip.text.y.left = element_text(angle = 0, face = "bold", vjust = 1))
+```
+
+## Map of current locations {.section-title}
+
+```{r}
+#| output: asis
+on_map <- alumni |>
+  left_join(geo, by = c("current_city" = "city", "current_country" = "country"))
+missing <- on_map |> filter(is.na(lat))
+on_map <- on_map |> filter(!is.na(lat))
+if (nrow(missing) > 0) {
+  cat(raw_block(p(class = "figure-note",
+    sprintf("%d alum(s) are not on the map because their city is hidden or not yet in data/geocache.csv.",
+            nrow(missing)))))
+}
+```
+
+```{r}
+#| fig-alt: "Map of alumni current locations"
+library(leaflet)
+popup <- sprintf('<strong><a href="people/%s/index.html">%s</a></strong><br>%s<br>%s, %s',
+  on_map$id, htmltools::htmlEscape(paste(on_map$first_name, on_map$last_name)),
+  htmltools::htmlEscape(mapply(pos, on_map$current_title, on_map$current_org)),
+  htmltools::htmlEscape(on_map$current_city), htmltools::htmlEscape(on_map$current_country))
+leaflet(on_map, height = 460, width = "100%") |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  addCircleMarkers(~lng, ~lat, popup = popup, radius = 8, stroke = TRUE,
+                   color = "#FFFFFF", weight = 2, fillColor = UGA_RED, fillOpacity = 0.9,
+                   label = ~paste(first_name, last_name),
+                   clusterOptions = markerClusterOptions(showCoverageOnHover = FALSE))
+```
+
+## Alumni by graduation year {.section-title}
+
+```{r}
+#| output: asis
+years <- sort(unique(alumni$grad_year), decreasing = TRUE)
+blocks <- lapply(years, function(y) {
+  al <- alumni |> filter(grad_year == y) |> arrange(last_name)
+  tagList(
+    h3(class = "year-heading", y),
+    div(class = "table-scroll", tags$table(class = "people-table",
+      tags$thead(tags$tr(tags$th(scope = "col", "Name"), tags$th(scope = "col", "Program"),
+        tags$th(scope = "col", "First position"), tags$th(scope = "col", "Current position"),
+        tags$th(scope = "col", "Sector"))),
+      tags$tbody(lapply(seq_len(nrow(al)), function(i) tags$tr(
+        tags$td(tags$a(href = paste0("people/", al$id[i], "/index.html"), paste(al$first_name[i], al$last_name[i]))),
+        tags$td(al$program[i]),
+        tags$td(pos(al$first_placement_title[i], al$first_placement_org[i])),
+        tags$td(pos(al$current_title[i], al$current_org[i])),
+        tags$td(al$sector[i])
+      )))
+    ))
+  )
+})
+cat(raw_block(tagList(blocks)))
+```

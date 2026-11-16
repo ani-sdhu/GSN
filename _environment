@@ -1,0 +1,15 @@
+# Build settings. Quarto reads this file automatically.
+# To override on your own computer without committing, put lines in
+# _environment.local (it is gitignored).
+#
+# GSN_DATA_SOURCE: where the form responses come from. A CSV path for
+#   now. Later this becomes the Google Sheet (see docs/form_setup.md).
+# GSN_MODE: "test" shows rows whose admin_notes start with "TEST:"
+#   (the SPIA faculty test rows) and adds a yellow test banner.
+#   "production" refuses to build if any TEST row is present.
+GSN_DATA_SOURCE=data/test/mock_responses.csv
+GSN_MODE=test
+
+# Make R read and write accented names and curly quotes correctly.
+LANG=C.UTF-8
+LC_ALL=C.UTF-8

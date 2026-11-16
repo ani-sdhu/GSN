@@ -1,0 +1,43 @@
+---
+title: "About & Join"
+description: "What the SPIA Graduate Student Network is, how to join, and how your information is handled."
+---
+
+```{r}
+source("R/site.R")
+```
+
+```{r}
+#| output: asis
+cat(raw_block(tagList(
+  test_banner(build_mode),
+  breadcrumbs(list(text = "Home", href = "index.html"), list(text = "About & Join")),
+  h1(class = "page-title", "About the Network")
+)))
+```
+
+## What this is {.section-title}
+
+The Graduate Student Network is a directory of current students and alumni of the graduate programs at UGA's School of Public & International Affairs: the PhD programs in Political Science & International Affairs and in Public Administration & Policy, the MA in Political Science & International Affairs, the Master of International Policy, and the Master of Public Administration.
+
+It shows who works on what, how to reach them, what they are open to helping with, and where alumni went after graduating. The goal is simple: make it easier to find a coauthor, a reader for a draft, a mock job talk audience, or someone who has been through the job market in your field.
+
+## Who runs it {.section-title}
+
+The network is run by SPIA graduate students. It is not an official University of Georgia or SPIA page. Questions go to the site admin at [gsn-admin@example.edu](mailto:gsn-admin@example.edu).
+
+## How to join or update your profile {#join .section-title}
+
+1. Fill out the [profile form](https://forms.example.com/gsn-profile-form). It takes about ten minutes.
+2. The site admin checks that the submission really came from you, then approves it.
+3. Your profile appears at the next site update (usually within a day).
+
+To change something later, submit the form again with the same email address. Your newest approved submission replaces the old one, and your profile link stays the same.
+
+## Privacy, in plain language {.section-title}
+
+- **Joining is opt-in.** Nobody is listed unless they fill out the form themselves and agree to be shown.
+- **You choose what shows.** At the end of the form you can tick anything you want kept off your public profile, such as your email, advisor, or current employer. Those fields never appear on the site, not even in the page's hidden code.
+- **Some things always show.** Your name, program, status, subfields, research interests, and short research description are the core of the directory, so they cannot be hidden.
+- **Leaving is easy.** Choose "Remove my profile" on the form. Your profile comes down at the next site update, without waiting for review.
+- **Nothing is shown before review.** The admin approves every new profile and every change before it goes live.

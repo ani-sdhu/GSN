@@ -1,0 +1,105 @@
+---
+title: "Directory"
+description: "Search graduate students and alumni of UGA's School of Public & International Affairs by research area, method, region, and more."
+---
+
+```{r}
+source("R/site.R")
+library(jsonlite)
+
+# Only public, already-cleaned fields go into the page.
+dir_data <- people |>
+  transmute(
+    id, first = first_name, last = last_name, pronouns,
+    photo = photo_url, program, status, cohort = cohort_year,
+    subfields, interests, methods, regions,
+    blurb, dissertation = dissertation_title,
+    grad_year, current = paste(coalesce(current_title, ""), coalesce(current_org, ""), sep = ", ") |>
+      stringr::str_remove("^, |, $") |> na_if("") |> na_if(", "),
+    open_coauthoring, open_reading_drafts, open_mock_job_talks,
+    open_mentoring, open_coffee_chats
+  )
+
+vocab_terms <- function(f) readr::read_csv(paste0("data/vocab/", f, ".csv"),
+                                           show_col_types = FALSE)$term
+statuses <- c(vocab_terms("status"), if (build_mode == "test") "Faculty (test data)")
+options_json <- list(
+  program  = vocab_terms("program"),
+  status   = statuses,
+  subfield = vocab_terms("subfields"),
+  method   = vocab_terms("methods"),
+  region   = vocab_terms("regions"),
+  cohort   = sort(unique(na.omit(people$cohort_year)), decreasing = TRUE),
+  open     = open_to_vocab
+)
+json <- toJSON(list(people = dir_data, options = options_json),
+               auto_unbox = TRUE, na = "null", null = "null")
+json <- gsub("</", "<\\/", json, fixed = TRUE)
+```
+
+```{r}
+#| output: asis
+cat(raw_block(tagList(
+  test_banner(build_mode),
+  breadcrumbs(list(text = "Home", href = "index.html"), list(text = "Directory")),
+  h1(class = "page-title", "Graduate Student Directory")
+)))
+```
+
+::: {.lead-red}
+Find SPIA graduate students and alumni by what they study, how they study it, and what they are open to helping with.
+:::
+
+```{=html}
+<div id="directory" class="directory">
+  <form class="directory-search" role="search" onsubmit="return false;">
+    <label for="q" class="visually-hidden">Search the directory</label>
+    <input id="q" type="search" placeholder="search names, topics, dissertations" autocomplete="off">
+    <button type="submit" aria-label="Search"><i class="bi bi-search" aria-hidden="true"></i></button>
+  </form>
+
+  <p class="filters-title" id="filters-title">Sort the Network by:</p>
+  <div class="filter-grid" role="group" aria-labelledby="filters-title">
+    <div class="filter"><label for="f-program">Program</label><select id="f-program" data-param="program"><option value="">any program</option></select></div>
+    <div class="filter"><label for="f-status">Status</label><select id="f-status" data-param="status"><option value="">any status</option></select></div>
+    <div class="filter"><label for="f-subfield">Subfield</label><select id="f-subfield" data-param="subfield"><option value="">any subfield</option></select></div>
+    <div class="filter"><label for="f-method">Methods</label><select id="f-method" data-param="method"><option value="">any method</option></select></div>
+    <div class="filter"><label for="f-region">Region</label><select id="f-region" data-param="region"><option value="">any region</option></select></div>
+    <div class="filter"><label for="f-cohort">Year entered</label><select id="f-cohort" data-param="cohort"><option value="">any year</option></select></div>
+  </div>
+
+  <fieldset class="open-filters" id="open-filters">
+    <legend>Only show people open to:</legend>
+  </fieldset>
+
+  <div class="letter-row">
+    <p id="letters-label">Or, browse by last name:</p>
+    <div class="letters" id="letters" role="group" aria-labelledby="letters-label"></div>
+  </div>
+
+  <div class="results-bar">
+    <p class="result-count" id="result-count" aria-live="polite"></p>
+    <div class="results-tools">
+      <span id="active-tag"></span>
+      <label for="sort">Sort by</label>
+      <select id="sort">
+        <option value="last">Last name</option>
+        <option value="cohort">Year entered (newest first)</option>
+      </select>
+      <span class="view-toggle" role="group" aria-label="View">
+        <button type="button" data-view="cards" aria-pressed="true">Cards</button>
+        <button type="button" data-view="table" aria-pressed="false">Table</button>
+      </span>
+      <button type="button" class="reset-button" id="reset">Clear all</button>
+    </div>
+  </div>
+
+  <div id="results"></div>
+</div>
+```
+
+```{r}
+#| output: asis
+cat("```{=html}\n<script type=\"application/json\" id=\"people-data\">", json,
+    "</script>\n<script src=\"assets/directory.js\"></script>\n```\n", sep = "")
+```

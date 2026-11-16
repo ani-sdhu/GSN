@@ -1,0 +1,50 @@
+---
+title: "Cohorts"
+description: "Everyone in the network grouped by the year they entered SPIA, with their current status."
+---
+
+```{r}
+source("R/site.R")
+```
+
+```{r}
+#| output: asis
+with_cohort <- people |> filter(!is.na(cohort_year))
+no_cohort <- people |> filter(is.na(cohort_year))
+years <- sort(unique(with_cohort$cohort_year), decreasing = TRUE)
+
+jump <- div(class = "letter-row", p("Jump to a year:"),
+  div(class = "letters", lapply(years, function(y)
+    tags$a(class = "tag", href = paste0("#cohort-", y), y))))
+
+sections <- lapply(years, function(y) {
+  co <- with_cohort |> filter(cohort_year == y) |> arrange(last_name, first_name)
+  n_alum <- sum(co$status == "Alumni")
+  summary <- sprintf("%d %s: %d still enrolled, %d graduated.", nrow(co),
+                     if (nrow(co) == 1) "person" else "people", nrow(co) - n_alum, n_alum)
+  tagList(
+    h2(class = "year-heading", id = paste0("cohort-", y), paste("Entered", y)),
+    p(class = "cohort-summary", summary),
+    tags$ul(class = "cohort-list", lapply(seq_len(nrow(co)), function(i) tags$li(
+      span(class = "cohort-name",
+           tags$a(href = paste0("people/", co$id[i], "/index.html"),
+                  paste(co$first_name[i], co$last_name[i]))),
+      status_badge(co$status[i]),
+      span(class = "cohort-program", co$program[i])
+    )))
+  )
+})
+
+note <- if (nrow(no_cohort) > 0) p(class = "figure-note",
+  sprintf("%d %s not listed here because no entry year is shown for them%s.",
+          nrow(no_cohort), if (nrow(no_cohort) == 1) "person is" else "people are",
+          if (build_mode == "test") " (this includes the faculty test rows)" else ""))
+
+cat(raw_block(tagList(
+  test_banner(build_mode),
+  breadcrumbs(list(text = "Home", href = "index.html"), list(text = "Cohorts")),
+  h1(class = "page-title", "Cohorts"),
+  p(class = "lead-red", "Each entering class, so you can see who is still here and who has graduated."),
+  jump, note, sections
+)))
+```

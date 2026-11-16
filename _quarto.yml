@@ -1,0 +1,62 @@
+project:
+  type: website
+  output-dir: _site
+  execute-dir: project
+  render:
+    - index.qmd
+    - alumni.qmd
+    - cohorts.qmd
+    - landscape.qmd
+    - about.qmd
+    - "people/*/index.qmd"
+  pre-render: Rscript R/prerender.R
+  post-render: Rscript R/check_output.R
+  resources:
+    - assets/directory.js
+
+website:
+  title: "Graduate Student Network"
+  description: "A directory of graduate students and alumni at UGA's School of Public & International Affairs."
+  search: false
+  page-navigation: false
+  navbar:
+    title: "Graduate Student Network"
+    background: light
+    collapse-below: lg
+    left:
+      - text: "Directory"
+        href: index.qmd
+      - text: "Alumni & Placements"
+        href: alumni.qmd
+      - text: "Cohorts"
+        href: cohorts.qmd
+      - text: "Research Landscape"
+        href: landscape.qmd
+      - text: "About"
+        href: about.qmd
+    right:
+      - text: "Join the Network"
+        href: about.qmd#join
+  page-footer:
+    left: |
+      **Graduate Student Network**<br>
+      School of Public & International Affairs, University of Georgia
+    right: |
+      A student-run project. Not an official University of Georgia page.<br>
+      Questions? [Email the site admin](mailto:gsn-admin@example.edu)
+
+format:
+  html:
+    theme: [cosmo, theme/spia.scss]
+    title-block-style: none
+    toc: false
+    page-layout: full
+    anchor-sections: false
+    smooth-scroll: false
+    include-before-body: theme/topbar.html
+    lang: en
+
+execute:
+  echo: false
+  warning: false
+  message: false

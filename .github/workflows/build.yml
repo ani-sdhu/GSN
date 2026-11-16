@@ -1,0 +1,83 @@
+# Builds the site on every push to main (and on demand), runs the
+# validation and privacy checks, and saves the finished site as a
+# downloadable zip ("gsn-site") on the workflow run page.
+#
+# Final hosting is not decided yet (WordPress embed, link-out, or a
+# static host). To also publish a preview to GitHub Pages, set the
+# repository variable DEPLOY_PAGES to "true" and turn on Pages with
+# "GitHub Actions" as the source.
+
+name: Build site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Nightly rebuild so newly approved profiles appear within a day.
+    - cron: "17 9 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            any::readr
+            any::dplyr
+            any::tidyr
+            any::purrr
+            any::stringr
+            any::jsonlite
+            any::htmltools
+            any::glue
+            any::ggplot2
+            any::svglite
+            any::leaflet
+            any::rmarkdown
+            any::knitr
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.6.42
+
+      - name: Render site (runs validation before and the privacy check after)
+        run: quarto render
+
+      - name: Show validation report
+        if: always()
+        run: cat _reports/validation.txt || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gsn-site
+          path: _site
+
+      - uses: actions/upload-pages-artifact@v3
+        if: vars.DEPLOY_PAGES == 'true'
+        with:
+          path: _site
+
+  deploy-preview:
+    if: vars.DEPLOY_PAGES == 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

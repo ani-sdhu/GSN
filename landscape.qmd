@@ -1,0 +1,46 @@
+---
+title: "Research Landscape"
+description: "What SPIA graduate students and alumni study: counts by subfield, method, and research interest."
+---
+
+```{r}
+source("R/site.R")
+
+bar_list <- function(values, param, top = Inf) {
+  counts <- sort(table(unlist(values)), decreasing = TRUE)
+  counts <- counts[order(-counts, names(counts))]
+  counts <- head(counts, top)
+  mx <- max(counts)
+  tags$ul(class = "bar-list", lapply(names(counts), function(k) {
+    n <- as.integer(counts[[k]])
+    tags$li(tags$a(
+      href = paste0("index.html?", param, "=", utils::URLencode(k, reserved = TRUE)),
+      `aria-label` = sprintf("%s: %d %s. Show them in the directory.", k, n,
+                             if (n == 1) "person" else "people"),
+      span(class = "bar-label", k),
+      span(class = "bar-track", `aria-hidden` = "true",
+           span(class = "bar-fill", style = sprintf("display:block;width:%.1f%%", 100 * n / mx))),
+      span(class = "bar-count", `aria-hidden` = "true", n)
+    ))
+  }))
+}
+```
+
+```{r}
+#| output: asis
+cat(raw_block(tagList(
+  test_banner(build_mode),
+  breadcrumbs(list(text = "Home", href = "index.html"), list(text = "Research Landscape")),
+  h1(class = "page-title", "Research Landscape"),
+  p(class = "lead-red", "What the network studies. Click any row to see those people in the directory."),
+  div(class = "landscape-cols",
+    div(h2(class = "section-title", "Subfields"), bar_list(people$subfields, "subfield")),
+    div(h2(class = "section-title", "Methods"), bar_list(people$methods, "method"))
+  ),
+  h2(class = "section-title", "Top 20 research interests"),
+  bar_list(people$interests, "interest", top = 20),
+  p(class = "figure-note",
+    "People can list several subfields, methods, and interests, so counts add up to more than the number of people. ",
+    "Interest tags are written by each person, so similar topics may appear under different words.")
+)))
+```

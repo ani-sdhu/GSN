@@ -1,0 +1,10 @@
+<div class="uga-topbar" id="uga-topbar"><a href="https://www.uga.edu/">University of Georgia</a><span class="topbar-right"><a href="https://spia.uga.edu/">School of Public &amp; International Affairs</a></span></div>
+<script>
+// Quarto pins its menu to the top of the window, so put the black UGA bar
+// inside that header to keep it above the menu.
+document.addEventListener("DOMContentLoaded", function () {
+  var bar = document.getElementById("uga-topbar");
+  var header = document.getElementById("quarto-header");
+  if (bar && header) header.insertBefore(bar, header.firstChild);
+});
+</script>

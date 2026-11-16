@@ -15,3 +15,6 @@
 *.json.key
 service-account*.json
 .env
+_environment.local
+/_cache/
+/_reports/
