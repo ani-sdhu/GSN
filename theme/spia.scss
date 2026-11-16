@@ -477,3 +477,10 @@ details.spia-accordion {
   .navbar-brand { white-space: normal; max-width: 70vw; }
   .navbar-brand::after { font-size: 0.6rem; white-space: normal; }
 }
+
+// ---- small fixes -------------------------------------------------------------
+.person-card .card-photo { text-decoration: none; }
+.person-card h2.card-name { border-bottom: 0; padding-bottom: 0; }
+.people-table td a.tag { color: #000000; font-weight: 400; }
+// Keep results visible below the pinned header after a tag click.
+.results-bar { scroll-margin-top: 140px; }
